@@ -1,0 +1,30 @@
+{
+  "name": "com.tdw.{package_name}",
+  "displayName": "{display_name}",
+  "version": "0.0.1",
+  "unity": "2018.3",
+  "description": " ",
+  "dependencies": {
+    "com.uurha.somepackage": "0.1.0"
+  },
+  "author": {
+    "name": "Techno Dwarf Works",
+    "url": "https://github.com/techno-dwarf-works"
+  },
+  "changelogUrl": "https://github.com/techno-dwarf-works/{project_name}",
+  "documentationUrl": "https://github.com/techno-dwarf-works/{project_name}/tree/main#readme",
+  "license": "MIT",
+  "licensesUrl":"https://github.com/techno-dwarf-works/{project_name}/blob/main/LICENSE",
+  "keywords": [
+    "keyword1",
+    "keyword2",
+    "keyword2"
+  ],
+  "samples": [
+    {
+      "displayName": "Default samples",
+      "description": "Contains test samples",
+      "path": "Samples~/TestSamples"
+    }
+  ]
+}
