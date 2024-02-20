@@ -1,8 +1,8 @@
 {
-    "name": "{project_name}.Editor",
-    "rootNamespace": "",
+    "name": "BetterLogger.Editor",
+    "rootNamespace": "Better.Logger.EditorAddons",
     "references": [
-        "GUID:443314a5a4e67c14a88ae223776b6554"
+        "GUID:a19d71ac5231b4a45a527dfc93a21f58"
     ],
     "includePlatforms": [
         "Editor"
