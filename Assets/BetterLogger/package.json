@@ -5,7 +5,7 @@
   "unity": "2021.3",
   "description": " ",
   "dependencies": {
-    "com.uurha.somepackage": "0.1.0"
+    "com.uurha.bettereditortools": "1.0.69"
   },
   "author": {
     "name": "Better Plugins",
