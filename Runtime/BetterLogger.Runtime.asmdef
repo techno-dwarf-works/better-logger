@@ -1,0 +1,16 @@
+{
+    "name": "BetterLogger.Runtime",
+    "rootNamespace": "Better.Logger.Runtime",
+    "references": [
+        "GUID:a59e3daedde9ca94bba45364d4ead25f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
