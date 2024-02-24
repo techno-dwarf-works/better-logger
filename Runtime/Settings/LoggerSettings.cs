@@ -13,10 +13,8 @@ namespace Better.Logger.Runtime.Settings
         [SerializeField] 
         private bool _useFormatting = true;
         
-
         public string LogFormat => _logFormat;
         public string ExceptionFormat => _exceptionFormat;
-
         public bool UseFormatting => _useFormatting;
     }
 }
