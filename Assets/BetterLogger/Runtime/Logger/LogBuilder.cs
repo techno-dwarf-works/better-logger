@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
+using Better.Extensions.Runtime;
 using Better.Logger.Runtime.Settings;
 using UnityEngine;
 
@@ -9,33 +10,41 @@ namespace Better.Logger.Runtime
 {
     public static class LogBuilder
     {
-        private static readonly LoggerSettings Settings;
-        private static readonly FieldInfo MessageField;
-        
-        private const string ExceptionMessageFieldName = "_message";
+        private static readonly LoggerSettings _settings;
+        private const int JumpCount = 4;
+        private const string MethodNameFormat = "{0}{1}";
         private const string Null = "null";
+        private const string Unknown = "Unknown";
 
         static LogBuilder()
         {
-            Settings = Resources.Load<LoggerSettings>(nameof(LoggerSettings));
-            MessageField = GetExceptionMessage();
+            _settings = Resources.Load<LoggerSettings>(nameof(LoggerSettings));
         }
 
         private static string GetDeclaringTypeName(MethodBase methodBase)
         {
+            if (methodBase == null)
+            {
+                return Unknown;
+            }
+
             return methodBase.DeclaringType != null ? methodBase.DeclaringType.Name : "Global";
         }
 
         private static string GetMethodName(MethodBase methodBase)
         {
+            if (methodBase == null)
+            {
+                return Unknown;
+            }
+
             var name = methodBase.Name;
             switch (name)
             {
                 case ".ctor":
                 case ".cctor":
                     var typeName = GetDeclaringTypeName(methodBase);
-                    const string format = "{0}{1}";
-                    return string.Format(format, typeName, name);
+                    return string.Format(MethodNameFormat, typeName, name);
             }
 
             return name;
@@ -53,47 +62,33 @@ namespace Better.Logger.Runtime
                 .Replace(LoggerDefinitions.Message, message);
             return builder;
         }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static FieldInfo GetExceptionMessage()
-        {
-            var type = typeof(Exception);
-            const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
-            return type.GetField(ExceptionMessageFieldName, flags);
-        }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void ReplaceExceptionMessage(Exception exception, object message)
+        public static string BuildLogObject(string message)
         {
-            MessageField.SetValue(exception, message.ToString());
-        }
-
-        public static object BuildLogObject(object message)
-        {
-            if (!Settings.UseFormatting) 
+            if (!_settings.UseFormatting)
                 return message;
 
-            return BuildLogByFormat(Settings.LogFormat, message, 3);
+            return BuildLogByFormat(_settings.LogFormat, message, JumpCount);
         }
 
-        private static object BuildLogByFormat(string logFormat, object message, int jumpCount)
+        private static string BuildLogByFormat(string logFormat, string message, int jumpCount)
         {
             using (var stackFrame = new JumpStackFrame())
             {
                 stackFrame.Jump(jumpCount);
                 var methodBase = stackFrame.GetMethod();
                 message ??= Null;
-                return GetLogBuilder(logFormat, message.ToString(), methodBase);
+                return GetLogBuilder(logFormat, message, methodBase).ToString();
             }
         }
 
-        public static void BuildLogException(Exception exception, object message)
+        public static void BuildLogException(Exception exception, string message)
         {
-            if (!Settings.UseFormatting) 
+            if (!_settings.UseFormatting)
                 return;
 
-            var logObject = BuildLogByFormat(Settings.ExceptionFormat, message, 3);
-            ReplaceExceptionMessage(exception, logObject);
+            var logObject = BuildLogByFormat(_settings.ExceptionFormat, message, JumpCount);
+            exception.ReplaceExceptionMessageField(logObject);
         }
     }
 }

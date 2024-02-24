@@ -1,11 +1,12 @@
 {
   "name": "com.tdw.better.logger",
   "displayName": "Better Logger",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "unity": "2021.3",
   "description": " ",
   "dependencies": {
-    "com.uurha.bettereditortools": "1.0.69"
+    "com.uurha.bettereditortools": "1.0.70",
+    "com.uurha.betterextensions": "1.2.3"
   },
   "author": {
     "name": "Better Plugins",
@@ -20,6 +21,7 @@
     "logging",
     "logs",
     "log",
-    "log management"
+    "log management",
+    "log handler"
   ]
 }
