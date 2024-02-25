@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using Better.Extensions.Runtime;
 using Better.Logger.Runtime.Settings;
 using UnityEngine;
@@ -54,6 +55,11 @@ namespace Better.Logger.Runtime
         {
             var className = GetDeclaringTypeName(methodBase);
             var methodName = GetMethodName(methodBase);
+            return GetFormatBuilder(logFormat, message, className, methodName);
+        }
+
+        private static StringBuilder GetFormatBuilder(string logFormat, string message, string className, string methodName)
+        {
             var length = logFormat.Length + className.Length + methodName.Length + message.Length;
             var builder = new StringBuilder(logFormat, length);
 
@@ -86,9 +92,36 @@ namespace Better.Logger.Runtime
         {
             if (!_settings.UseFormatting)
                 return;
+            string logObject;
+            if (TryGetFirstCaller(exception, out var info))
+            {
+                logObject = GetFormatBuilder(_settings.ExceptionFormat, message, info.ClassName, info.MethodName).ToString();
+            }
+            else
+            {
+                logObject = BuildLogByFormat(_settings.ExceptionFormat, message, JumpCount);
+            }
 
-            var logObject = BuildLogByFormat(_settings.ExceptionFormat, message, JumpCount);
             exception.ReplaceExceptionMessageField(logObject);
+        }
+
+        private static bool TryGetFirstCaller(Exception exception, out (string ClassName, string MethodName) info)
+        {
+            if (string.IsNullOrEmpty(exception.StackTrace))
+            {
+                info = new(Unknown, Unknown);
+                return false;
+            }
+
+            var pattern = @"(?<ClassName>\w+)\.(?<MethodName>\w+)\s*\(\s*\)";
+
+            // Use Regex to find matches in the input string
+            var match = Regex.Match(exception.StackTrace, pattern);
+
+            var className = match.Groups["ClassName"].Value;
+            var methodName = match.Groups["MethodName"].Value;
+            info = new(className, methodName);
+            return true;
         }
     }
 }

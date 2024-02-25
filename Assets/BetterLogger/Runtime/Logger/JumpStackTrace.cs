@@ -7,7 +7,7 @@ namespace Better.Logger.Runtime
 {
     public class JumpStackFrame : IDisposable
     {
-        private StackFrame _stackTrace;
+        private StackFrame _stackFrame;
         private int _jumpCount;
         private string _message;
 
@@ -25,8 +25,8 @@ namespace Better.Logger.Runtime
         public StackFrame GetStackFrame()
         {
             Jump();
-            _stackTrace = new StackFrame(_jumpCount, false);
-            return _stackTrace;
+            _stackFrame = new StackFrame(_jumpCount, false);
+            return _stackFrame;
         }
 
         public MethodBase GetMethod()
@@ -39,7 +39,7 @@ namespace Better.Logger.Runtime
         {
             if (disposing)
             {
-                _stackTrace = null;
+                _stackFrame = null;
             }
         }
 
