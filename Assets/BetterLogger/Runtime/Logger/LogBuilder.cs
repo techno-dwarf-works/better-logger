@@ -12,10 +12,15 @@ namespace Better.Logger.Runtime
     public static class LogBuilder
     {
         private static readonly LoggerSettings _settings;
+        private static readonly string _firstCallerPattern = $@"(?<{ClassNameTag}>\w+)\.(?<{MethodNameTag}>\w+)\s*\(\s*\)";
+        
         private const int JumpCount = 4;
         private const string MethodNameFormat = "{0}{1}";
         private const string Null = "null";
         private const string Unknown = "Unknown";
+
+        private const string ClassNameTag = "ClassName";
+        private const string MethodNameTag = "MethodName";
 
         static LogBuilder()
         {
@@ -113,13 +118,19 @@ namespace Better.Logger.Runtime
                 return false;
             }
 
-            var pattern = @"(?<ClassName>\w+)\.(?<MethodName>\w+)\s*\(\s*\)";
-
             // Use Regex to find matches in the input string
-            var match = Regex.Match(exception.StackTrace, pattern);
+            var match = Regex.Match(exception.StackTrace, _firstCallerPattern);
 
-            var className = match.Groups["ClassName"].Value;
-            var methodName = match.Groups["MethodName"].Value;
+            var classNameGroup = match.Groups[ClassNameTag];
+            var methodNameGroup = match.Groups[MethodNameTag];
+            if (!classNameGroup.Success || !methodNameGroup.Success)
+            {
+                info = new(Unknown, Unknown);
+                return false;
+            }
+
+            var className = classNameGroup.Value;
+            var methodName = methodNameGroup.Value;
             info = new(className, methodName);
             return true;
         }
