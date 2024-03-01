@@ -7,9 +7,12 @@ namespace Better.Logger.Runtime
 {
     public class JumpStackFrame : IDisposable
     {
-        private StackFrame _stackTrace;
+        private StackFrame _stackFrame;
         private int _jumpCount;
         private string _message;
+        
+        //TODO: Maybe move to Settings
+        private const int MaxEvaluateDepth = 5;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Jump(int jumpCount = 1)
@@ -21,12 +24,38 @@ namespace Better.Logger.Runtime
         {
             Jump();
         }
-        
+
         public StackFrame GetStackFrame()
         {
             Jump();
-            _stackTrace = new StackFrame(_jumpCount, false);
-            return _stackTrace;
+            var original = new StackFrame(_jumpCount, false);
+
+            _stackFrame = EvaluateFrame(original, _jumpCount) ?? original;
+
+            return _stackFrame;
+        }
+
+        private StackFrame EvaluateFrame(StackFrame original, int jumpCount)
+        {
+            var bufferDepth = 0;
+            while (bufferDepth <= MaxEvaluateDepth)
+            {
+                bufferDepth++;
+                if (original == null) return null;
+                var methodBase = original.GetMethod();
+                if (methodBase == null || !ShouldBeExcluded(methodBase)) return original;
+                jumpCount++;
+                var bufferStack = new StackFrame(jumpCount, false);
+
+                original = bufferStack;
+            }
+
+            return null;
+        }
+
+        private static bool ShouldBeExcluded(MethodBase methodBase)
+        {
+            return methodBase.GetCustomAttribute<DebuggerNonUserCodeAttribute>() != null || methodBase.GetCustomAttribute<DebuggerHiddenAttribute>() != null;
         }
 
         public MethodBase GetMethod()
@@ -39,7 +68,7 @@ namespace Better.Logger.Runtime
         {
             if (disposing)
             {
-                _stackTrace = null;
+                _stackFrame = null;
             }
         }
 

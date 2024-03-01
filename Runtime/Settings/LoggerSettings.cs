@@ -1,13 +1,17 @@
-﻿using Better.Tools.Runtime.Settings;
+﻿using Better.ProjectSettings.Runtime;
+using Better.Singletons.Runtime.Attributes;
 using UnityEngine;
 
 namespace Better.Logger.Runtime.Settings
 {
-    public class LoggerSettings : ProjectSettings
+    [ScriptableCreate(nameof(Better) + "/" + nameof(Logger))]
+    public class LoggerSettings : ScriptableSettings<LoggerSettings>
     {
-        [TextArea(1, 5)] [SerializeField]
+        [TextArea(1, 5)] 
+        [SerializeField]
         private string _logFormat = $"[{LoggerDefinitions.ClassName}] {LoggerDefinitions.MethodName}: {LoggerDefinitions.Message}";
-        [TextArea(1, 5)] [SerializeField]
+        [TextArea(1, 5)] 
+        [SerializeField]
         private string _exceptionFormat = $"[{LoggerDefinitions.ClassName}] {LoggerDefinitions.MethodName}: {LoggerDefinitions.Message}";
 
         [SerializeField] 

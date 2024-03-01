@@ -3,8 +3,9 @@
     "rootNamespace": "Better.Logger.EditorAddons",
     "references": [
         "GUID:a19d71ac5231b4a45a527dfc93a21f58",
-        "GUID:19891d5296046644cbc12fcf3702cca3",
-        "GUID:a59e3daedde9ca94bba45364d4ead25f"
+        "GUID:1862b35041b066d42ab4d3caf773657b",
+        "GUID:ecdd0819e3429eb44b13a432679a1135",
+        "GUID:01df13aca8d01e24a911bcc3e8277031"
     ],
     "includePlatforms": [
         "Editor"
