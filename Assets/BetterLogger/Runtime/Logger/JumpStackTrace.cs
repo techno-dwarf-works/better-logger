@@ -10,6 +10,8 @@ namespace Better.Logger.Runtime
         private StackFrame _stackFrame;
         private int _jumpCount;
         private string _message;
+        
+        //TODO: Maybe move to Settings
         private const int MaxEvaluateDepth = 5;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
