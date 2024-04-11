@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Better.Extensions.Runtime;
+using Better.Commons.Runtime.Extensions;
 
 namespace Better.Logger.Runtime
 {

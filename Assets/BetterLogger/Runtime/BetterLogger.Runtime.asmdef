@@ -2,9 +2,9 @@
     "name": "BetterLogger.Runtime",
     "rootNamespace": "Better.Logger.Runtime",
     "references": [
-        "GUID:28da8d3b12e3efa47928e0c9070f853d",
         "GUID:1862b35041b066d42ab4d3caf773657b",
-        "GUID:af7fffdf1d83bc842b0f6e3a01efda16"
+        "GUID:af7fffdf1d83bc842b0f6e3a01efda16",
+        "GUID:8bd4b41f8da90144d9006c4d926c9679"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
