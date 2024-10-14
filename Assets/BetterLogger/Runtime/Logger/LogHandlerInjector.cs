@@ -11,8 +11,10 @@ namespace Better.Logger.Runtime
         {
             _logHandler = new LogHandler();
         }
-
+        
+#if UNITY_EDITOR
         [InitializeOnLoadMethod]
+#endif
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
         public static void OnInitialize()
         {
