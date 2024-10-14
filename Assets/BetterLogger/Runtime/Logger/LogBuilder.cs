@@ -14,8 +14,10 @@ namespace Better.Logger.Runtime
 
         private const int JumpCount = 4;
         private const string Null = "null";
-        
+
+#if UNITY_EDITOR
         [InitializeOnLoadMethod]
+#endif
         [RuntimeInitializeOnLoadMethod]
         private static void Initialize()
         {
